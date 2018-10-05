@@ -34,7 +34,7 @@ $ chmod +x *.sh
 - Install needed applications step by step by scripts:
 ```sh
 $./install_ruby.sh
-$./install_mongodb.sh
+$ sudo ./install_mongodb.sh
 $./deploy.sh
 ```
 
@@ -43,7 +43,7 @@ $./deploy.sh
 http://<external_ip>:9292
 ```
 
-## VM creation with bootstrap shell script:
+## VM creation with bootstrap shell script
 
 - Create VM instance with script from repository:
 ```sh
