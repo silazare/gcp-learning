@@ -20,17 +20,14 @@
             "tags": "reddit"
 } ],
         "provisioners": [
-          {
-            "type": "shell",
-            "script": "../shell/install_ruby.sh"
+		  {
+            "type": "file",
+            "source": "files/puma.service",
+            "destination": "/home/appuser/puma.service",
+            "direction": "upload"
           },
           {
             "type": "shell",
-            "script": "../shell/install_mongodb.sh",
-            "execute_command": "sudo {{.Path}}"
-          },
-          {
-            "type": "shell",
-            "script": "../shell/deploy.sh"
+            "script": "../shell/deploy_application_packer.sh"
 } ]
 }

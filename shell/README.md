@@ -43,6 +43,11 @@ $./deploy.sh
 http://<external_ip>:9292
 ```
 
+- Dont forget to purge created instance from GCP:
+```sh
+gcloud compute instances delete --zone=europe-west1-b reddit-app
+```
+
 ## VM creation with bootstrap shell script
 
 - Create VM instance with script from repository:

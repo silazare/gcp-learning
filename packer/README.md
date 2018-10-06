@@ -3,6 +3,12 @@
 - Packer should be installed before
 - TCP port 9292 should be opened in GCP firewall
 
+- Clone this repository and go to packer folder:
+```sh
+$ git clone https://github.com/silazare/gcp-learning.git
+$ cd gcp-learning/packer
+```
+
 - Create reddit base image (Ruby+MongoDB), project-id is mandatory input parameter:
 ```sh
 packer build \
@@ -33,7 +39,11 @@ ssh appuser@<external_ip> -i ~/.ssh/appuser
 http://<external_ip>:9292
 ```
 
-- Purge created image from GCP
+- Dont forget to purge created instance and image from GCP:
+```sh
+gcloud compute instances delete --zone=europe-west1-b reddit-app
+gcloud compute images delete <created-image-name>
+```
 
 ## VM creation via packer backed full AMI
 
@@ -67,7 +77,11 @@ ssh appuser@<external_ip> -i ~/.ssh/appuser
 http://<external_ip>:9292
 ```
 
-- Purge created image from GCP
+- Dont forget to purge created instance and image from GCP:
+```sh
+gcloud compute instances delete --zone=europe-west1-b reddit-app
+gcloud compute images delete <created-image-name>
+```
 
 ## Appendix
 
