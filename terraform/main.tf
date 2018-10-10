@@ -5,62 +5,65 @@ provider "google" {
 }
 
 resource "google_compute_firewall" "firewall_puma" {
-           name    = "allow-puma-default"
-           # Network name for rule apply
-           network = "default"
-           # Rules
-           allow {
-             protocol = "tcp"
-             ports    = ["9292"]
-           }
+  name = "allow-puma-default"
 
-           # IP addresses
-           source_ranges = ["0.0.0.0/0"]
-           # Rule should be applied for instances with tags
-           target_tags = ["reddit-app"]
+  # Network name for rule apply
+  network = "default"
+
+  # Rules
+  allow {
+    protocol = "tcp"
+    ports    = ["9292"]
+  }
+
+  # IP addresses
+  source_ranges = ["0.0.0.0/0"]
+
+  # Rule should be applied for instances with tags
+  target_tags = ["reddit-app"]
 }
 
-
 resource "google_compute_instance" "app" {
-         name         = "reddit-app"
-         machine_type = "${var.machine_type}"
-         zone         = "${var.zone}"
+  name         = "reddit-app"
+  machine_type = "${var.machine_type}"
+  zone         = "${var.zone}"
 
-         metadata {
-           sshKeys = "appuser:${file(var.public_key_path)}"
-         }
+  metadata {
+    sshKeys = "appuser:${file(var.public_key_path)}"
+  }
 
-         # Define boot disk
-         boot_disk {
-           initialize_params {
-             image = "${var.disk_image}"
-           }
-         }
+  # Define boot disk
+  boot_disk {
+    initialize_params {
+      image = "${var.disk_image}"
+    }
+  }
 
-         tags = ["reddit-app"]
+  tags = ["reddit-app"]
 
-         # Define network network_interface
-         network_interface {
-           # Network to which interface will be attached
-           network = "default"
-           # Use ephemeral IP for access from Internet
-           access_config {}
-         }
+  # Define network network_interface
+  network_interface {
+    # Network to which interface will be attached
+    network = "default"
 
-         # Define provisioners connection config
-         connection {
-           type        = "ssh"
-           user        = "appuser"
-           agent       = false
-           private_key = "${file(var.private_key_path)}"
-         }
+    # Use ephemeral IP for access from Internet
+    access_config {}
+  }
 
-         provisioner "file" {
-           source      = "files/puma.service"
-           destination = "/tmp/puma.service"
-         }
+  # Define provisioners connection config
+  connection {
+    type        = "ssh"
+    user        = "appuser"
+    agent       = false
+    private_key = "${file(var.private_key_path)}"
+  }
 
-         provisioner "remote-exec" {
-           script = "files/deploy.sh"
-         }
+  provisioner "file" {
+    source      = "files/puma.service"
+    destination = "/tmp/puma.service"
+  }
+
+  provisioner "remote-exec" {
+    script = "files/deploy.sh"
+  }
 }
