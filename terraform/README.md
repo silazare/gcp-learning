@@ -46,5 +46,5 @@ terraform destroy
 `terraform show` - display your resources  
 `terraform refresh` - refresh your resources  
 `terraform output` - check output variables  
-`terraform taint google_compute_instance.app` - mark resource to be re-created
-`terraform fmt` - format terraform files 
+`terraform taint google_compute_instance.app` - mark resource to be re-created  
+`terraform fmt` - format terraform files
