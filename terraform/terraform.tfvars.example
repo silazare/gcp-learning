@@ -1,0 +1,8 @@
+# Example for variables mapping which should be defined for your project
+project = "<your_project_name>"
+public_key_path = "~/.ssh/<your_key_name>.pub"
+private_key_path = "~/.ssh/<your_key_name>"
+disk_image = "<your_image_name>"
+region = "<region_name>"
+zone = "<zone_name>"
+machine_type = "<machine_type_name>"

@@ -3,4 +3,5 @@
 ### Project tree
 
  * [shell](./shell) -- VM provisioning via shell scripts
- * [packer](./packer) -- Immutable images via packer builder
+ * [packer](./packer) -- Immutable images via Packer builder
+ * [terraform](./terraform) -- IaC via Terraform

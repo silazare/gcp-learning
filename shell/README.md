@@ -38,7 +38,7 @@ $ sudo ./install_mongodb.sh
 $./deploy.sh
 ```
 
-- Check web application is available:
+- Check that web application is available:
 ```sh
 http://<external_ip>:9292
 ```
@@ -62,4 +62,3 @@ gcloud compute instances create \
 --zone=europe-west1-b reddit-app \
 --metadata-from-file startup-script=deploy_application.sh
 ```
-

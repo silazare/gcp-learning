@@ -34,7 +34,7 @@ gcloud compute instances create \
 ssh appuser@<external_ip> -i ~/.ssh/appuser
 ```
 
-- Check web application is available:
+- Check that web application is available:
 ```sh
 http://<external_ip>:9292
 ```
@@ -72,7 +72,7 @@ gcloud compute instances create \
 ssh appuser@<external_ip> -i ~/.ssh/appuser
 ```
 
-- Check web application is available:
+- Check that web application is available:
 ```sh
 http://<external_ip>:9292
 ```
@@ -90,4 +90,3 @@ gcloud compute images delete <created-image-name>
 packer validate ubuntu16.json
 packer inspect ubuntu16.json
 ```
-
