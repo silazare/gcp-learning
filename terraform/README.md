@@ -26,7 +26,7 @@ terraform plan
 terraform apply
 ```
 
-- SSH to VM instance IP which terraform output should return:
+- SSH to VM instance IP (from terraform output):
 ```sh
 ssh appuser@<external_ip> -i ~/.ssh/appuser
 ```
@@ -43,7 +43,7 @@ terraform destroy
 
 ## Additional terraform commands
 
-`<terraform show>` - display your resources
-`<terraform refresh>` - refresh your resources
-`<terraform output>` - check output variables
-`<terraform taint google_compute_instance.app>` - mark resource to be re-created:
+`terraform show` - display your resources  
+`terraform refresh` - refresh your resources  
+`terraform output` - check output variables  
+`terraform taint google_compute_instance.app` - mark resource to be re-created  
