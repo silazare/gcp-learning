@@ -1,3 +1,10 @@
+## Project structure
+.
+ * [main.tf](./main.tf) -- General configuration
+ * [variables.tf](./variables.tf) -- Input variables
+ * [outputs.tf](./outputs.tf) -- Output variables
+ * [terrafrom.tfvars.example](./terrafrom.tfvars.example) -- Example of input variables definition
+
 ## VM creation via terraform
 
 - Terraform should be installed before
