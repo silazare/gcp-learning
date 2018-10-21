@@ -83,10 +83,30 @@ gcloud compute instances delete --zone=europe-west1-b reddit-app
 gcloud compute images delete <created-image-name>
 ```
 
-## Appendix
+## Appendix A: Additional Packer commands
 
 - Packer commands to check templates before build:
 ```sh
 packer validate ubuntu16.json
 packer inspect ubuntu16.json
+```
+
+## Appendix B: Create separate images for terraform with structured resources
+
+- Create DB base image (MongoDB installed), project-id is mandatory input parameter:
+```sh
+packer build \
+-var 'project_id=<your-gcp-project-id>' \
+-var 'machine_type=f1-micro' \
+-var 'source_image=ubuntu-1604-xenial-v20181004' \
+db.json
+```
+
+- Create APP base image (Ruby installed), project-id is mandatory input parameter:
+```sh
+packer build \
+-var 'project_id=<your-gcp-project-id>' \
+-var 'machine_type=f1-micro' \
+-var 'source_image=ubuntu-1604-xenial-v20181004' \
+app.json
 ```
