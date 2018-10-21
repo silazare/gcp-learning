@@ -25,6 +25,11 @@ terraform init
 
 - Define your variables in terraform.tfvars (you may use terraform.tfvars.example for reference)
 
+- Load your local modules into .terraform folder:
+```sh
+terraform get
+```
+
 - Plan and check your changes before create:
 ```sh
 terraform plan
