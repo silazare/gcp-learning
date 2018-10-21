@@ -1,9 +1,9 @@
 ## Project structure
 .
  * [main.tf](./main.tf) -- General configuration
- * [vpc.tf](./main.tf) -- VPC configuration
- * [app.tf](./main.tf) -- Configuration for Ruby app VM
- * [db.tf](./main.tf) -- Configuration for MongoDB VM
+ * [vpc.tf](./vpc.tf) -- VPC configuration
+ * [app.tf](./app.tf) -- Configuration for Ruby app VM
+ * [db.tf](./db.tf) -- Configuration for MongoDB VM
  * [variables.tf](./variables.tf) -- Input variables
  * [terraform.tfvars.example](./terraform.tfvars.example) -- Example of input variables definition
 
