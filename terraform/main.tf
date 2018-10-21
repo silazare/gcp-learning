@@ -1,14 +1,28 @@
 # Main resources description
 provider "google" {
   project = "${var.project}"
-  region  = "${var.project}"
+  region  = "${var.region}"
+}
+
+resource "google_compute_firewall" "firewall_ssh" {
+  name        = "default-allow-ssh"
+  network     = "default"
+  description = "Allow SSH from anywhere"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
 }
 
 resource "google_compute_firewall" "firewall_puma" {
   name = "allow-puma-default"
 
   # Network name for rule apply
-  network = "default"
+  network     = "default"
+  description = "Allow Puma web service from anywhere"
 
   # Rules
   allow {
@@ -21,6 +35,10 @@ resource "google_compute_firewall" "firewall_puma" {
 
   # Rule should be applied for instances with tags
   target_tags = ["reddit-app"]
+}
+
+resource "google_compute_address" "app_ip" {
+  name = "reddit-app-ip"
 }
 
 resource "google_compute_instance" "app" {
@@ -47,7 +65,10 @@ resource "google_compute_instance" "app" {
     network = "default"
 
     # Use ephemeral IP for access from Internet
-    access_config {}
+    # It is used implicit dependency VM of app_ip address
+    access_config {
+      nat_ip = "${google_compute_address.app_ip.address}"
+    }
   }
 
   # Define provisioners connection config

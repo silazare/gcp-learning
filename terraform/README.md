@@ -48,6 +48,17 @@ http://<external_ip>:9292
 terraform destroy
 ```
 
+## Default SSH rule import from GCP and addition
+
+- Default SSH firewall rule should be added into main.tf and apply command should return error
+
+- Import your current firewall state from GCP:
+```sh
+terraform import google_compute_firewall.firewall_ssh default-allow-ssh
+```
+
+- Plan and apply the resources again and confirm that it will be completed OK
+
 ## Additional terraform commands
 
 `terraform show` - display your resources  
