@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
-cd /home/appuser
+
+source ~/.profile
 git clone https://github.com/silazare/reddit.git
 cd reddit
 bundle install
-puma -d
+
+sudo mv /tmp/puma.service /etc/systemd/system/puma.service
+sudo systemctl start puma && sudo systemctl enable puma

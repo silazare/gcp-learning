@@ -80,11 +80,11 @@ resource "google_compute_instance" "app" {
   }
 
   provisioner "file" {
-    source      = "files/puma.service"
+    source      = "../packer/files/puma.service"
     destination = "/tmp/puma.service"
   }
 
   provisioner "remote-exec" {
-    script = "files/deploy.sh"
+    script = "../shell/deploy.sh"
   }
 }
