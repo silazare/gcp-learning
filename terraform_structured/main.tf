@@ -5,7 +5,8 @@ provider "google" {
 }
 
 module "vpc" {
-  source          = "modules/vpc"
+  source        = "modules/vpc"
+  source_ranges = "${var.source_ranges}"
 }
 
 module "app" {

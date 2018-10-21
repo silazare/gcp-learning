@@ -7,3 +7,4 @@ zone = "<zone_name>"
 machine_type = "<machine_type_name>"
 app_disk_image = "<your_reddit-app-base_image_name>"
 db_disk_image = "<your_reddit-db_image_name"
+source_ranges = ["X.X.X.X/X"]
