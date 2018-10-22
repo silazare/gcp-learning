@@ -10,7 +10,7 @@
 ## Separate VMs creation via terraform
 
 - Terraform should be installed before
-- Reddit-db and Reddit-base-app images should be baked before, see [packer](./packer)
+- Reddit-db and Reddit-base-app images should be baked before, see Appendix B [packer](./packer)
 
 - Clone this repository and go to terraform_structured folder:
 ```sh
@@ -18,12 +18,14 @@ $ git clone https://github.com/silazare/gcp-learning.git
 $ cd gcp-learning/terraform_structured
 ```
 
-- Check or download GCP cloud provider:
+- Configure backend.tf for your own remote backend or remove it to use local
+
+- Define your variables in terraform.tfvars (you may use terraform.tfvars.example for reference)
+
+- Initialize GCP cloud provider, modules and remote backend:
 ```sh
 terraform init
 ```
-
-- Define your variables in terraform.tfvars (you may use terraform.tfvars.example for reference)
 
 - Load your local modules into .terraform folder:
 ```sh
@@ -38,4 +40,14 @@ terraform plan
 - Create resources:
 ```sh
 terraform apply -auto-approve=true
+```
+
+- SSH to both VM instance External IP to check connection:
+```sh
+ssh appuser@<external_ip> -i ~/.ssh/appuser
+```
+
+- Destroy your resources:
+```sh
+terraform destroy
 ```

@@ -66,3 +66,4 @@ terraform import google_compute_firewall.firewall_ssh default-allow-ssh
 `terraform output` - check output variables  
 `terraform taint google_compute_instance.app` - mark resource to be re-created  
 `terraform fmt` - format terraform files
+`terraform graph | dot -Tpng > graph.png` - draw terraform object relations
