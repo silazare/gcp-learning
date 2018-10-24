@@ -1,6 +1,6 @@
-## GCP infrastructure learning tasks
+## GCP infrastructure and DevOps toolset learning tasks
 
-### Project tree
+### Projects navigation tree
 
  * [shell](./shell) -- VM provisioning via shell scripts
  * [packer](./packer) -- Immutable images via Packer builder
