@@ -27,11 +27,11 @@ packer build \
 reddit_db.json
 ```
 
-- Create all infrastructure from created artifact images via [Terraform](./terraform_structured)
+- Create all infrastructure from created artifact images via [Terraform](../terraform_structured)
 ```sh
 cd ../terraform_structured
 terraform apply
-``
+```
 
 - SSH to VM instances and check that Ruby, bundler and MongoDB are installed:
 ```sh
@@ -43,23 +43,23 @@ systemctl status mongod
 
 - Create Static inventory for app and db servers (use hosts.example for reference) or use Dynamic (see Appendix A).
 
-- Run Reddit App provision and deploy playbook for static inventory,
-Latest version is defined for dynamic inventory, uncomment and switch playbook hosts accordingly
+- Reddit App provision and deploy playbook for static inventory  
+Latest version is defined for dynamic inventory, uncomment and swap playbook hosts accordingly
 ```sh
 ansible-playbook reddit_app.yml
 ```
 
-- Run Reddit App provision and deploy playbook for dynamic inventory:
+- Reddit App provision and deploy playbook for dynamic inventory:
 ```sh
 ansible-playbook reddit_app.yml -i gce.py
 ```
 
 - Check that web application is available:
 ```sh
-http://<external_ip>:9292
+http://<app_external_ip>:9292
 ```
 
-- Create all infrastructure from created artifact images via Terraform:
+- Destroy all infrastructure via Terraform:
 ```sh
 cd ../terraform_structured
 terraform destroy
@@ -67,10 +67,12 @@ terraform destroy
 
 ## Appendix A: GCE dynamic inventory configuration
 
-- Make sure that you have prerequsites installed:
+- Make sure that you have following pip prerequisites installed:
 ```sh
-pip list apache-libcloud
-pip list pycrypto
+apache-libcloud
+pycrypto
+requests
+google-auth
 ```
 
 - Create ansible service account:
@@ -80,7 +82,7 @@ gcloud iam service-accounts create ansible --display-name "Ansible account"
 
 - Grant editor role for ansible account in your project:
 ```sh
-gcloud projects add-iam-policy-binding sandox-218915 \
+gcloud projects add-iam-policy-binding <project_id> \
     --member serviceAccount:ansible@<project_id>.iam.gserviceaccount.com --role roles/editor
 ```
 
