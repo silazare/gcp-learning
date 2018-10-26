@@ -1,0 +1,6 @@
+app:
+  hosts:
+    X.X.X.X
+db:
+  hosts:
+    X.X.X.X

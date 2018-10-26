@@ -1,19 +1,30 @@
-# Playbook for Configuration Management
-# Direct executions with tags: provision db and app servers and deploy application
+# Playbook for Reddit App Configuration Management
+# Execution with Static Inventory:
+#  ansible-playbook reddit_app.yml
+
+# Execution with Static Inventory and separate hosts or tags:
 #  ansible-playbook reddit_app.yml --limit db
 #  ansible-playbook reddit_app.yml --limit app --tags app-tag
 #  ansible-playbook reddit_app.yml --limit app --tags deploy-tag
 
+# Execution with Dynamic Inventory:
+#  ansible-playbook reddit_app.yml -i gce.py
+
 ---
-- name: Configure hosts & deploy application
-  hosts: all
+- name: Configure MongoDB host
+  hosts: tag_reddit-db
+#  hosts: db
   vars:
     mongo_bind_ip: 0.0.0.0
-    db_host: 10.132.0.2
-    app: reddit
-    app_dir: /home/appuser/{{ app }}
 
   tasks:
+  - name: Register MongoDB internal IP
+    debug:
+      msg: "{{ gce_private_ip }}"
+    register: db_internal_ip
+    when: gce_private_ip is defined
+    tags: db-tag
+
   - name: Change mongo config file
     become: yes
     template:
@@ -22,6 +33,28 @@
       mode: 0644
     notify: restart mongod
     tags: db-tag
+
+  handlers:
+  - name: restart mongod
+    become: yes
+    service:
+      name: mongod
+      state: restarted
+
+- name: Configure App host & deploy application
+  hosts: tag_reddit-app
+#  hosts: app
+  vars:
+    db_host: 10.132.0.2
+    app: reddit
+    app_dir: /home/appuser/{{ app }}
+
+  tasks:
+  - name: Set MongoDB internal IP as db_host
+    set_fact:
+      db_host: "{{ hostvars['reddit-db']['db_internal_ip'].msg }}"
+    when: hostvars['reddit-db'] and hostvars['reddit-db']['db_internal_ip'] is defined
+    tags: app-tag
 
   - name: Add unit file for Puma
     become: yes
@@ -36,9 +69,10 @@
     template:
       src: templates/db_config.j2
       dest: /home/appuser/db_config
+    notify: restart puma
     tags: app-tag
 
-  - name: enable puma
+  - name: Enable puma
     become: yes
     systemd:
       name: puma
@@ -63,12 +97,6 @@
     tags: deploy-tag
 
   handlers:
-  - name: restart mongod
-    become: yes
-    service:
-      name: mongod
-      state: restarted
-
   - name: reload puma
     become: yes
     service:

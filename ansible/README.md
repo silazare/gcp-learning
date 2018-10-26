@@ -29,6 +29,7 @@ reddit_db.json
 
 - Create all infrastructure from created artifact images via [Terraform](./terraform_structured)
 ```sh
+cd ../terraform_structured
 terraform apply
 ``
 
@@ -40,15 +41,17 @@ bundler -v
 systemctl status mongod
 ```
 
-- Create ansible inventory file for app and db servers.
+- Create Static inventory for app and db servers (use hosts.example for reference) or use Dynamic (see Appendix A).
 
-- Run Reddit App provision and deploy playbook commands one by one:
+- Run Reddit App provision and deploy playbook for static inventory,
+Latest version is defined for dynamic inventory, uncomment and switch playbook hosts accordingly
 ```sh
-ansible-playbook reddit_app.yml --limit db
+ansible-playbook reddit_app.yml
+```
 
-ansible-playbook reddit_app.yml --limit app --tags app-tag
-
-ansible-playbook reddit_app.yml --limit app --tags deploy-tag
+- Run Reddit App provision and deploy playbook for dynamic inventory:
+```sh
+ansible-playbook reddit_app.yml -i gce.py
 ```
 
 - Check that web application is available:
@@ -58,5 +61,44 @@ http://<external_ip>:9292
 
 - Create all infrastructure from created artifact images via Terraform:
 ```sh
+cd ../terraform_structured
 terraform destroy
-``
+```
+
+## Appendix A: GCE dynamic inventory configuration
+
+- Make sure that you have prerequsites installed:
+```sh
+pip list apache-libcloud
+pip list pycrypto
+```
+
+- Create ansible service account:
+```sh
+gcloud iam service-accounts create ansible --display-name "Ansible account"
+```
+
+- Grant editor role for ansible account in your project:
+```sh
+gcloud projects add-iam-policy-binding sandox-218915 \
+    --member serviceAccount:ansible@<project_id>.iam.gserviceaccount.com --role roles/editor
+```
+
+- Create key.json for ansible account:
+```sh
+gcloud iam service-accounts keys create key.json \
+--iam-account=ansible@<project_id>.iam.gserviceaccount.com
+```
+
+- Configure secrets.py with your credentials from key.json, use secrets.py.example for reference.
+
+- Check that Dynamic Inventory is retrieving hosts:
+```sh
+./gce.py --list
+```
+
+- Force clear GCE cache for Google oauth and Ansible if it stucks after infra recreation:
+```sh
+rm ~/.google_libcloud_auth.*
+rm ~/.ansible/tmp/ansible-gce.cache
+```
