@@ -4,11 +4,10 @@ After=network.target
 
 [Service]
 Type=simple
+EnvironmentFile=/home/appuser/db_config
 User=appuser
 WorkingDirectory=/home/appuser/reddit
-ExecStart=/bin/bash -lc '/usr/local/bin/puma -b tcp://0.0.0.0:9292'
-TimeoutSec=30
-RestartSec=15s
+ExecStart=/bin/bash -lc 'puma'
 Restart=always
 
 [Install]

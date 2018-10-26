@@ -1,4 +1,4 @@
-## Bake images and deploy simple application with Packer+Ansible+GCP
+## Bake images and deploy simple application with Packer+Terraform+Ansible
 
 - Packer should be installed before
 - TCP port 9292 should be opened in GCP firewall
@@ -9,27 +9,30 @@ $ git clone https://github.com/silazare/gcp-learning.git
 $ cd gcp-learning/ansible
 ```
 
-- Create reddit base image (Ruby+MongoDB), project-id is mandatory input parameter:
+- Create reddit app image (Ruby), project-id is mandatory input parameter:
 ```sh
 packer build \
 -var 'project_id=<your-gcp-project-id>' \
 -var 'machine_type=f1-micro' \
 -var 'source_image=ubuntu-1604-xenial-v20181004' \
-reddit_base.json
+reddit_app.json
 ```
 
-- Create VM instance from created artifact image:
+- Create reddit db image (MongoDB), project-id is mandatory input parameter:
 ```sh
-gcloud compute instances create \
---boot-disk-size=10GB \
---image=<created-image-name> \
---machine-type=g1-small \
---tags puma-server \
---restart-on-failure \
---zone=europe-west1-b reddit-app
+packer build \
+-var 'project_id=<your-gcp-project-id>' \
+-var 'machine_type=f1-micro' \
+-var 'source_image=ubuntu-1604-xenial-v20181004' \
+reddit_db.json
 ```
 
-- SSH to VM instance and check that Ruby, bundler and MongoDB are installed:
+- Create all infrastructure from created artifact images via [Terraform](./terraform_structured)
+```sh
+terraform apply
+``
+
+- SSH to VM instances and check that Ruby, bundler and MongoDB are installed:
 ```sh
 ssh appuser@<external_ip> -i ~/.ssh/appuser
 ruby -v
@@ -37,19 +40,15 @@ bundler -v
 systemctl status mongod
 ```
 
-- Create ansible inventory file for reddit-app instance and run ansible ping
-```sh
-cat << EOF > hosts
-`echo '[reddit_app]'`
-`gcloud compute instances list | egrep 'reddit-app' | awk '{print $5}'| tail -1`
-EOF
+- Create ansible inventory file for app and db servers.
 
-ansible reddit_app -i hosts -m ping -u appuser --private-key=~/.ssh/appuser
-```
-
-- Run Reddit App deploy playbook
+- Run Reddit App provision and deploy playbook commands one by one:
 ```sh
-ansible-playbook -u appuser -i hosts reddit_app_deploy.yml --private-key=~/.ssh/appuser
+ansible-playbook reddit_app.yml --limit db
+
+ansible-playbook reddit_app.yml --limit app --tags app-tag
+
+ansible-playbook reddit_app.yml --limit app --tags deploy-tag
 ```
 
 - Check that web application is available:
@@ -57,7 +56,7 @@ ansible-playbook -u appuser -i hosts reddit_app_deploy.yml --private-key=~/.ssh/
 http://<external_ip>:9292
 ```
 
-- Dont forget to purge created instance from GCP:
+- Create all infrastructure from created artifact images via Terraform:
 ```sh
-gcloud compute instances delete --zone=europe-west1-b reddit-app
-```
+terraform destroy
+``

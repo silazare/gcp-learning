@@ -1,0 +1,82 @@
+# Playbook for Configuration Management
+# Direct executions with tags: provision db and app servers and deploy application
+#  ansible-playbook reddit_app.yml --limit db
+#  ansible-playbook reddit_app.yml --limit app --tags app-tag
+#  ansible-playbook reddit_app.yml --limit app --tags deploy-tag
+
+---
+- name: Configure hosts & deploy application
+  hosts: all
+  vars:
+    mongo_bind_ip: 0.0.0.0
+    db_host: 10.132.0.2
+    app: reddit
+    app_dir: /home/appuser/{{ app }}
+
+  tasks:
+  - name: Change mongo config file
+    become: yes
+    template:
+      src: templates/mongod.conf.j2
+      dest: /etc/mongod.conf
+      mode: 0644
+    notify: restart mongod
+    tags: db-tag
+
+  - name: Add unit file for Puma
+    become: yes
+    template:
+      src: templates/puma.service.j2
+      dest: /etc/systemd/system/puma.service
+      mode: 0644
+    notify: reload puma
+    tags: app-tag
+
+  - name: Add config for DB connection
+    template:
+      src: templates/db_config.j2
+      dest: /home/appuser/db_config
+    tags: app-tag
+
+  - name: enable puma
+    become: yes
+    systemd:
+      name: puma
+      enabled: yes
+    tags: app-tag
+
+  - name: Checkout Reddit App git repo
+    git:
+      repo: "https://github.com/silazare/{{ app }}.git"
+      dest: "{{ app_dir }}"
+      version: "{{ git_commit_hash | default('HEAD') }}"
+      force: yes
+      update: yes
+    notify: restart puma
+    tags: deploy-tag
+
+  - name: Install Reddit App
+    bundler:
+      state: present
+      chdir: "{{ app_dir }}"
+    notify: restart puma
+    tags: deploy-tag
+
+  handlers:
+  - name: restart mongod
+    become: yes
+    service:
+      name: mongod
+      state: restarted
+
+  - name: reload puma
+    become: yes
+    service:
+      name: puma
+      state: reloaded
+
+  - name: restart puma
+    become: yes
+    service:
+      name: puma
+      state: restarted

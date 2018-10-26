@@ -1,0 +1,23 @@
+# Playbook for Packer APP AMI build
+# Direct execution: ansible-playbook -u ubuntu -i 35.195.76.112, reddit_app.yml --private-key=~/.ssh/ubuntu
+---
+- name: Reddit App -- configure app environment
+  hosts: all
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: Install Ruby and Rubygems and required packages
+    apt:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - ruby-full
+      - ruby-dev
+      - build-essential
+
+  - name: Install Ruby bundler
+    gem:
+      name: bundler
+      state: present
+      user_install: no
