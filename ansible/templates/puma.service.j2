@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 EnvironmentFile=/home/appuser/db_config
 User=appuser
-WorkingDirectory=/home/appuser/reddit
+WorkingDirectory={{ app_dir }}
 ExecStart=/bin/bash -lc 'puma'
 Restart=always
 
