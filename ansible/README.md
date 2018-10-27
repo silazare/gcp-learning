@@ -98,6 +98,10 @@ gcloud iam service-accounts keys create key.json \
 ```sh
 ./gce.py --list
 ```
+- Verify Ansible SSH connection:
+```sh
+ansible all -i gce.py -m ping
+```
 
 - Force clear GCE cache for Google oauth and Ansible if it stucks after infra recreation:
 ```sh
