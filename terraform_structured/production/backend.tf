@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
     bucket = "tf-state-structured"
-    prefix = "terraform/state"
+    prefix = "terraform/production_state"
   }
 }

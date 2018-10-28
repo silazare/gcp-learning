@@ -18,6 +18,8 @@ $ git clone https://github.com/silazare/gcp-learning.git
 $ cd gcp-learning/terraform_structured
 ```
 
+- There are two environments: production and staging, your should go to needed env folder.
+
 - Configure backend.tf for your own remote backend or remove it to use local
 
 - Define your variables in terraform.tfvars (you may use terraform.tfvars.example for reference)
