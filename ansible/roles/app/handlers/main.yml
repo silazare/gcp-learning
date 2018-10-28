@@ -1,0 +1,6 @@
+---
+- name: reload puma
+  service:
+    name: puma
+    daemon_reload: yes
+    state: reloaded

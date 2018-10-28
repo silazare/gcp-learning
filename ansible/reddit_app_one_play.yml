@@ -14,6 +14,8 @@
 - name: Configure MongoDB host
   hosts: tag_reddit-db
 #  hosts: db
+  become: yes
+  tags: db-tag
   vars:
     mongo_bind_ip: 0.0.0.0
 
@@ -23,27 +25,25 @@
       msg: "{{ gce_private_ip }}"
     register: db_internal_ip
     when: gce_private_ip is defined
-    tags: db-tag
 
   - name: Change mongo config file
-    become: yes
     template:
       src: templates/mongod.conf.j2
       dest: /etc/mongod.conf
       mode: 0644
     notify: restart mongod
-    tags: db-tag
 
   handlers:
   - name: restart mongod
-    become: yes
     service:
       name: mongod
       state: restarted
 
-- name: Configure App host & deploy application
+- name: Configure App host
   hosts: tag_reddit-app
 #  hosts: app
+  become: yes
+  tags: app-tag
   vars:
     db_host: 10.132.0.2
     app: reddit
@@ -54,31 +54,42 @@
     set_fact:
       db_host: "{{ hostvars['reddit-db']['db_internal_ip'].msg }}"
     when: hostvars['reddit-db'] and hostvars['reddit-db']['db_internal_ip'] is defined
-    tags: app-tag
 
   - name: Add unit file for Puma
-    become: yes
     template:
       src: templates/puma.service.j2
       dest: /etc/systemd/system/puma.service
       mode: 0644
     notify: reload puma
-    tags: app-tag
 
   - name: Add config for DB connection
     template:
       src: templates/db_config.j2
       dest: /home/appuser/db_config
-    notify: restart puma
-    tags: app-tag
+      owner: appuser
+      group: appuser
+    notify: reload puma
 
   - name: Enable puma
-    become: yes
     systemd:
       name: puma
       enabled: yes
-    tags: app-tag
 
+  handlers:
+  - name: reload puma
+    service:
+      name: puma
+      state: reloaded
+
+- name: Deploy application
+  hosts: tag_reddit-app
+#  hosts: app
+  tags: deploy-tag
+  vars:
+    app: reddit
+    app_dir: /home/appuser/{{ app }}
+
+  tasks:
   - name: Checkout Reddit App git repo
     git:
       repo: "https://github.com/silazare/{{ app }}.git"
@@ -87,22 +98,14 @@
       force: yes
       update: yes
     notify: restart puma
-    tags: deploy-tag
 
   - name: Install Reddit App
     bundler:
       state: present
       chdir: "{{ app_dir }}"
     notify: restart puma
-    tags: deploy-tag
 
   handlers:
-  - name: reload puma
-    become: yes
-    service:
-      name: puma
-      state: reloaded
-
   - name: restart puma
     become: yes
     service:

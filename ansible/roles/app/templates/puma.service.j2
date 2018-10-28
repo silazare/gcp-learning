@@ -7,7 +7,7 @@ Type=simple
 EnvironmentFile=/home/appuser/db_config
 User=appuser
 WorkingDirectory={{ app_dir }}
-ExecStart=/bin/bash -lc 'puma'
+ExecStart=/bin/bash -lc 'puma -b tcp://{{ listen_ip }}:9292'
 Restart=always
 
 [Install]

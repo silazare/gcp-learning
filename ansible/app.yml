@@ -1,0 +1,21 @@
+---
+- name: Configure App host
+  hosts: tag_reddit-app
+#  hosts: app
+  become: yes
+
+  roles:
+    - app
+    - role: nginx
+      nginx_http_params:
+        - sendfile "on"
+        - access_log "/var/log/nginx/access.log"
+      nginx_sites:
+        reddit:
+          - listen 80
+          - server_name "{{ inventory_hostname }}"
+          - location / { proxy_pass http://localhost:9292/; include /etc/nginx/proxy_params; }
+      nginx_configs:
+        proxy:
+          - proxy_set_header X-Real-IP  $remote_addr
+          - proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for

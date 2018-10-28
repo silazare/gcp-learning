@@ -43,15 +43,10 @@ systemctl status mongod
 
 - Create Static inventory for app and db servers (use hosts.example for reference) or use Dynamic (see Appendix A).
 
-- Reddit App provision and deploy playbook for static inventory  
-Latest version is defined for dynamic inventory, uncomment and swap playbook hosts accordingly
+- Reddit App provision and deploy playbook. Latest version is defined for dynamic inventory at staging.
+If you want to force static inventory then create static hosts from hosts.example and uncomment it in playbooks as well.
 ```sh
-ansible-playbook reddit_app.yml
-```
-
-- Reddit App provision and deploy playbook for dynamic inventory:
-```sh
-ansible-playbook reddit_app.yml -i gce.py
+ansible-playbook site.yml
 ```
 
 - Check that web application is available:
