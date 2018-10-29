@@ -1,7 +1,26 @@
+## Project structure
+.
+ * [environments](./environments) -- Static and Dynamic inventories
+   * [production](./environments/production)
+   * [staging](./environments/staging)
+ * [roles](./roles) -- Roles
+   * [app](.roles/app) -- App host provision role
+   * [db](./roles/db) -- DB host provision role
+   * [nginx](./roles/nginx) -- NGINX installation role
+ * [ansible.cfg](./ansible.cfg) -- General config file for ansible
+ * [app.yml](./app.yml) -- Playbook for App host provision
+ * [db.yml](./db.yml) -- Playbook for DB host provision
+ * [deploy.yml](./deploy.yml) -- Playbook for deploy code
+ * [packer_reddit_app.yml](./packer_reddit_app.yml) -- Playbook for Packer App AMI build
+ * [packer_reddit_db.yml](./packer_reddit_db.yml) -- Playbook for Packer DB AMI build
+ * [reddit_app_one_play.yml](./reddit_app_one_play.yml) -- Old main playbook version with all-in-one
+ * [reddit_app.json](./reddit_app.json) -- Packer file for App
+ * [reddit_db.json](./reddit_db.json) -- Packer file for DB
+ * [site.yml](./site.yml) -- Main playbook with imports and roles
+
 ## Bake images and deploy simple application with Packer+Terraform+Ansible
 
 - Packer should be installed before
-- TCP port 9292 should be opened in GCP firewall
 
 - Clone this repository and go to ansible folder:
 ```sh
@@ -49,9 +68,9 @@ If you want to force static inventory then create static hosts from hosts.exampl
 ansible-playbook site.yml
 ```
 
-- Check that web application is available:
+- Check that web application is available on HTTP port:
 ```sh
-http://<app_external_ip>:9292
+http://<app_external_ip>:80
 ```
 
 - Destroy all infrastructure via Terraform:
