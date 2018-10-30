@@ -1,5 +1,5 @@
 ## Project structure
-.
+
  * [main.tf](./main.tf) -- General configuration
  * [modules/vpc/main.tf](./modules/vpc/main.tf) -- VPC configuration
  * [modules/app/main.tf](./modules/app/main.tf) -- Configuration for Ruby app VM
@@ -10,7 +10,7 @@
 ## Separate VMs creation via terraform
 
 - Terraform should be installed before
-- Reddit-db and Reddit-base-app images should be baked before, see Appendix B [packer](./packer)
+- Reddit-db and Reddit-base-app images should be baked before, see Appendix B [packer](https://github.com/silazare/gcp-learning/tree/master/packer#appendix-b-create-separate-images-for-terraform-with-structured-resources)
 
 - Clone this repository and go to terraform_structured folder:
 ```sh
@@ -22,7 +22,7 @@ $ cd gcp-learning/terraform_structured
 
 - Configure backend.tf for your own remote backend or remove it to use local
 
-- Define your variables in terraform.tfvars (you may use terraform.tfvars.example for reference)
+- Define your variables in terraform.tfvars (you may use [terraform.tfvars.example](./terraform.tfvars.example) for reference)
 
 - Initialize GCP cloud provider, modules and remote backend:
 ```sh

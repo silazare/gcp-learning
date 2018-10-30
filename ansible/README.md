@@ -1,5 +1,5 @@
 ## Project structure
-.
+
  * [environments](./environments) -- Static and Dynamic inventories
    * [production](./environments/production)
    * [staging](./environments/staging)
@@ -60,7 +60,7 @@ bundler -v
 systemctl status mongod
 ```
 
-- Create Static inventory for app and db servers (use hosts.example for reference) or use Dynamic (see Appendix A).
+- Create Static inventory for app and db servers (use hosts.example for reference) or use Dynamic (see [Appendix A](https://github.com/silazare/gcp-learning/tree/master/ansible#appendix-a-gce-dynamic-inventory-configuration)).
 
 - Reddit App provision and deploy playbook. Latest version is defined for dynamic inventory at staging.
 If you want to force static inventory then create static hosts from hosts.example and uncomment it in playbooks as well.

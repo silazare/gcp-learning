@@ -1,5 +1,5 @@
 ## Project structure
-.
+
  * [main.tf](./main.tf) -- General configuration
  * [variables.tf](./variables.tf) -- Input variables
  * [outputs.tf](./outputs.tf) -- Output variables
@@ -8,7 +8,7 @@
 ## VM creation via terraform
 
 - Terraform should be installed before
-- Reddit-base image should be baked before, see [packer](./packer)
+- Reddit-base image should be baked before, see [packer](../packer)
 
 - Clone this repository and go to terraform folder:
 ```sh
@@ -21,7 +21,7 @@ $ cd gcp-learning/terraform
 terraform init
 ```
 
-- Define your variables in terraform.tfvars (you may use terraform.tfvars.example for reference)
+- Define your variables in terraform.tfvars (you may use [terraform.tfvars.example](./terraform.tfvars.example) for reference)
 
 - Plan and check your changes before create:
 ```sh
@@ -48,9 +48,9 @@ http://<external_ip>:9292
 terraform destroy
 ```
 
-## Default SSH rule import from GCP and addition
+## Appendix A: Default SSH rule import from GCP and addition
 
-- Default SSH firewall rule should be added into main.tf and apply command should return error
+- Default SSH firewall rule could be added into main.tf because apply command may return error
 
 - Import your current firewall state from GCP:
 ```sh
@@ -59,7 +59,7 @@ terraform import google_compute_firewall.firewall_ssh default-allow-ssh
 
 - Plan and apply the resources again and confirm that it will be completed OK
 
-## Additional terraform commands
+## Appendix B: Additional terraform commands
 
 `terraform show` - display your resources  
 `terraform refresh` - refresh your resources  
