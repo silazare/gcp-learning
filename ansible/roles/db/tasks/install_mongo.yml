@@ -22,6 +22,6 @@
 - name: Enable mongod service
   service:
     name: mongod
-    enabled: true
+    enabled: yes
     state: started
   tags: mongo_install

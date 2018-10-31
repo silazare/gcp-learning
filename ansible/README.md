@@ -135,9 +135,9 @@ vagrant destroy -f
 ## Appendix C: Testing roles with Molecule+TestInfra
 
 #### Molecule structure example on db role:
-[test_default.py](./roles/db/molecule/default/tests/test_default.py) -- Tests
-[molecule.yml](./roles/db/molecule/default/molecule.yml) -- Description of Molecule test machine
-[playbook.yml](./roles/db/molecule/default/playbook.yml) -- Converge playbook
+* [test_default.py](./roles/db/molecule/default/tests/test_default.py) -- Tests
+* [molecule.yml](./roles/db/molecule/default/molecule.yml) -- Description of Molecule test machine
+* [playbook.yml](./roles/db/molecule/default/playbook.yml) -- Converge playbook
 
 [TestInfra Modules](https://testinfra.readthedocs.io/en/latest/modules.html)
 
@@ -171,4 +171,9 @@ molecule converge
 - Run tests:
 ```sh
 molecule verify
+```
+
+- Run full tests scope:
+```sh
+molecule test
 ```
