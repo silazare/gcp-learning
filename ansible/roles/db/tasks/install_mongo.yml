@@ -1,3 +1,4 @@
+---
 - name: Add mongodb-org repo key
   apt_key:
     keyserver: hkp://keyserver.ubuntu.com
@@ -21,6 +22,6 @@
 - name: Enable mongod service
   service:
     name: mongod
-    enabled: yes
+    enabled: true
     state: started
   tags: mongo_install

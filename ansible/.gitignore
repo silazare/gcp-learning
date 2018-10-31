@@ -2,6 +2,6 @@
 hosts
 key*.json
 secrets.py
-secrets.pyc
+*.pyc
 .vagrant/
-*.logs
+*.log

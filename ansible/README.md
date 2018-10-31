@@ -81,12 +81,9 @@ terraform destroy
 
 ## Appendix A: GCE dynamic inventory configuration
 
-- Make sure that you have following pip prerequisites installed:
+- Make sure that you have following pip prerequisites installed, see [requirements.txt](./requirements.txt):
 ```sh
-apache-libcloud
-pycrypto
-requests
-google-auth
+pip install -r requirements.txt
 ```
 
 - Create ansible service account:
@@ -133,4 +130,45 @@ vagrant up
 - Destroy local test environment:
 ```sh
 vagrant destroy -f
+```
+
+## Appendix C: Testing roles with Molecule+TestInfra
+
+#### Molecule structure example on db role:
+[test_default.py](./roles/db/molecule/default/tests/test_default.py) -- Tests
+[molecule.yml](./roles/db/molecule/default/molecule.yml) -- Description of Molecule test machine
+[playbook.yml](./roles/db/molecule/default/playbook.yml) -- Converge playbook
+
+[TestInfra Modules](https://testinfra.readthedocs.io/en/latest/modules.html)
+
+- Make sure that you have following pip prerequisites installed, see [requirements.txt](./requirements.txt):
+```sh
+pip install -r requirements.txt
+```
+
+- Create template for testing inside db folder:
+```sh
+cd roles/db
+molecule init scenario --scenario-name default -r db -d vagrant
+```
+
+- Create test VM inside roles/db folder:
+```sh
+molecule create
+```
+
+- List and login into machines:
+```sh
+molecule list
+molecule login -h instance
+```
+
+- Apply converge playbook to machine:
+```sh
+molecule converge
+```
+
+- Run tests:
+```sh
+molecule verify
 ```
