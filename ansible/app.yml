@@ -1,8 +1,18 @@
+# Playbook for application services install & config
 ---
 - name: Configure App host
-  hosts: tag_reddit-app
-#  hosts: app
+#  hosts: tag_reddit-app
+  hosts: app
+  gather_facts: no
   become: yes
+
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: false
+
+    - name: Gathering facts with setup module
+      setup:
 
   roles:
     - app

@@ -1,0 +1,17 @@
+---
+- name: Install Ruby and Rubygems and required packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ruby-full
+    - ruby-dev
+    - build-essential
+  tags: ruby_install
+
+- name: Install Ruby bundler
+  gem:
+    name: bundler
+    state: present
+    user_install: no
+  tags: ruby_install

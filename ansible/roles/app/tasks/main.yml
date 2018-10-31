@@ -8,22 +8,5 @@
     db_host: "{{ hostvars['reddit-db']['db_internal_ip'].msg }}"
   when: hostvars['reddit-db'] and hostvars['reddit-db']['db_internal_ip'] is defined
 
-- name: Add unit file for Puma
-  template:
-    src: puma.service.j2
-    dest: /etc/systemd/system/puma.service
-    mode: 0644
-  notify: reload puma
-
-- name: Add config for DB connection
-  template:
-    src: db_config.j2
-    dest: /home/appuser/db_config
-    owner: appuser
-    group: appuser
-  notify: reload puma
-
-- name: Enable puma
-  systemd:
-    name: puma
-    enabled: yes
+- include: ruby.yml
+- include: puma.yml

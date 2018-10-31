@@ -4,10 +4,11 @@ After=network.target
 
 [Service]
 Type=simple
-EnvironmentFile=/home/appuser/db_config
-User=appuser
+EnvironmentFile=/home/{{ deploy_user }}/db_config
+User={{ deploy_user }}
 WorkingDirectory={{ app_dir }}
 ExecStart=/bin/bash -lc 'puma -b tcp://{{ listen_ip }}:9292'
+ExecReload=/bin/kill -s USR1 $MAINPID
 Restart=always
 
 [Install]

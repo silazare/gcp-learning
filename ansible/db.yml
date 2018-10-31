@@ -1,8 +1,18 @@
+# Playbook for MongoDB install & config
 ---
 - name: Configure MongoDB host
-  hosts: tag_reddit-db
-#  hosts: db
+#  hosts: tag_reddit-db
+  hosts: db
+  gather_facts: no
   become: yes
+
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: false
+
+    - name: Gathering facts with setup module
+      setup:
 
   roles:
     - db

@@ -9,9 +9,5 @@
   register: db_internal_ip
   when: gce_private_ip is defined
 
-- name: Change mongo config file
-  template:
-    src: mongod.conf.j2
-    dest: /etc/mongod.conf
-    mode: 0644
-  notify: restart mongod
+- include: install_mongo.yml
+- include: config_mongo.yml

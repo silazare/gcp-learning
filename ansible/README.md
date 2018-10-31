@@ -122,3 +122,15 @@ ansible all -i gce.py -m ping
 rm ~/.google_libcloud_auth.*
 rm ~/.ansible/tmp/ansible-gce.cache
 ```
+
+## Appendix B: Testing roles with Vagrant local env
+
+- Create local test environment:
+```sh
+vagrant up
+```
+
+- Destroy local test environment:
+```sh
+vagrant destroy -f
+```

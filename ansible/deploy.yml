@@ -1,10 +1,13 @@
+# Playbook for Reddit application code deploy
 ---
 - name: Deploy application
-  hosts: tag_reddit-app
-#  hosts: app
+#  hosts: tag_reddit-app
+  hosts: app
+  become: yes
   vars:
     app: reddit
-    app_dir: /home/appuser/{{ app }}
+    deploy_user: appuser
+    app_dir: /home/{{ deploy_user }}/{{ app }}
 
   tasks:
   - name: Checkout Reddit App git repo
