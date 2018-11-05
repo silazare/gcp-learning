@@ -1,11 +1,11 @@
-## Docker simple project
+## Docker monolith
 
 ### Docker Machine usage via GCE:
 
-- Clone this repository and go to docker folder:
+- Clone this repository and go to docker monolith folder:
 ```sh
 $ git clone https://github.com/silazare/gcp-learning.git
-$ cd gcp-learning/docker
+$ cd gcp-learning/docker/monolith
 ```
 
 - Init gcloud and auth for docker-machine:
@@ -54,6 +54,31 @@ docker login
 ```sh
 docker tag reddit:latest <your-login>/test-reddit:1.0
 docker push <your-login>/test-reddit:1.0
+```
+
+- Remove docker-machine:
+```sh
+docker-machine rm docker-host -f
+```
+
+## Docker microservices
+
+- Clone this repository and go to docker microservices folder:
+```sh
+$ git clone https://github.com/silazare/gcp-learning.git
+$ cd gcp-learning/docker/microservices
+```
+
+- Download latest mongo image:
+```sh
+docker pull mongo:latest
+```
+
+- Create our app images:
+```sh
+docker build -t <your-login>/post:1.0 ./post-py
+docker build -t <your-login>/comment:1.0 ./comment
+docker build -t <your-login>/ui:1.0 ./ui
 ```
 
 
