@@ -78,13 +78,46 @@ docker pull mongo:latest
 ```sh
 docker build -t <your-login>/post:1.0 ./post-py
 docker build -t <your-login>/comment:1.0 ./comment
-docker build -t <your-login>/ui:1.0 ./ui
+docker build -t <your-login>/ui:2.0 ./ui
+```
+- Create docker bridge network:
+```sh
+docker network create reddit
 ```
 
+- Create docker volume:
+```sh
+docker volume create reddit_db
+```
+
+- Run containers:
+```sh
+docker run -d --network=reddit -v reddit_db:/data/db \
+--network-alias=post_db --network-alias=comment_db mongo:latest
+
+docker run -d --network=reddit \
+--network-alias=post <your-login>/post:1.0
+
+docker run -d --network=reddit \
+--network-alias=comment <your-login>/comment:1.0
+
+docker run -d --network=reddit \
+-p 9292:9292 <your-login>/ui:2.0
+```
+
+- Kill containers:
+```sh
+docker kill $(docker ps -q)
+```
 
 ### Appendix A: Additional commands
 
 - Test container with more user privileges:
 ```sh
 docker run --rm --pid host -ti tehbilly/htop
+```
+
+- Show docker container env:
+```sh
+docker exec <id> env
 ```
