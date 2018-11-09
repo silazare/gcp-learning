@@ -1,6 +1,6 @@
 ## Docker monolith
 
-### Docker Machine usage via GCE:
+### Docker Machine usage via GCE
 
 - Clone this repository and go to docker monolith folder:
 ```sh
@@ -63,6 +63,8 @@ docker-machine rm docker-host -f
 
 ## Docker microservices
 
+### General steps
+
 - Clone this repository and go to docker microservices folder:
 ```sh
 $ git clone https://github.com/silazare/gcp-learning.git
@@ -77,12 +79,12 @@ docker pull mongo:latest
 - Create our app images:
 ```sh
 docker build -t <your-login>/post:1.0 ./post-py
-docker build -t <your-login>/comment:1.0 ./comment
+docker build -t <your-login>/comment:2.0 ./comment
 docker build -t <your-login>/ui:2.0 ./ui
 ```
 - Create docker bridge network:
 ```sh
-docker network create reddit
+docker network create reddit --driver bridge
 ```
 
 - Create docker volume:
@@ -99,7 +101,7 @@ docker run -d --network=reddit \
 --network-alias=post <your-login>/post:1.0
 
 docker run -d --network=reddit \
---network-alias=comment <your-login>/comment:1.0
+--network-alias=comment <your-login>/comment:2.0
 
 docker run -d --network=reddit \
 -p 9292:9292 <your-login>/ui:2.0
@@ -108,6 +110,50 @@ docker run -d --network=reddit \
 - Kill containers:
 ```sh
 docker kill $(docker ps -q)
+```
+
+### Docker Networking
+
+- Create symlink for net namespace:
+```sh
+sudo ln -s /var/run/docker/netns /var/run/netns
+```
+
+- Research different network types and interfaces with net-tools image and compare ifconfig outputs:
+```sh
+docker run --network none --rm -d --name net_test joffotron/docker-net-tools -c "sleep 100"
+
+docker run --network host --rm -d --name net_test joffotron/docker-net-tools -c "sleep 100"
+
+docker exec -ti net_test ifconfig
+
+sudo ip netns
+```
+
+- Run Reddit in 2 bridge networks:
+```sh
+docker network create back_net --subnet=10.0.2.0/24
+docker network create front_net --subnet=10.0.1.0/24
+
+docker run -d --network=front_net -p 9292:9292 --name ui  <your-login>/ui:2.0
+docker run -d --network=back_net --name comment  <your-login>/comment:2.0
+docker run -d --network=back_net --name post  <your-login>/post:1.0
+docker run -d --network=back_net --name mongo_db --network-alias=post_db --network-alias=comment_db mongo:latest
+```
+- Attach containers to front_net network to make service OK:
+```sh
+docker network connect front_net post
+docker network connect front_net comment
+```
+
+### Docker Compose
+
+- Export username variable and up compose:
+
+```sh
+export USERNAME=<your-login> 
+docker-compose up -d
+docker-compose ps
 ```
 
 ### Appendix A: Additional commands
