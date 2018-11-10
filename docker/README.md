@@ -148,10 +148,9 @@ docker network connect front_net comment
 
 ### Docker Compose
 
-- Export username variable and up compose:
+- Start docker compose with default variables from .env:
 
 ```sh
-export USERNAME=<your-login> 
 docker-compose up -d
 docker-compose ps
 ```
