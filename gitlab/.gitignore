@@ -1,0 +1,14 @@
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+*.tfvars
+.terraform/
+.terraform.tfstate.lock.info
+*.retry
+hosts
+key*.json
+secrets.py
+*.pyc
+.vagrant/
+*.log
+geerlingguy.gitlab/

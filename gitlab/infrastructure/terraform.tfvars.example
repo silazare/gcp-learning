@@ -1,0 +1,7 @@
+project = ""
+region = "europe-west1"
+zone = "europe-west1-b"
+public_key_path = ""
+private_key_path = ""
+machine_type = "n1-standard-2"
+base_disk_image = "ubuntu-1604-xenial-v20181114"

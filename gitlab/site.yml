@@ -1,0 +1,21 @@
+
+# ansible-playbook site.yml
+---
+- name: Configure App host
+  hosts: tag_gitlab
+  gather_facts: no
+  become: yes
+  vars:
+    gitlab_port: 8443
+
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: false
+
+    - name: Gathering facts with setup module
+      setup:
+
+  roles:
+    - role: geerlingguy.gitlab
+      gitlab_external_url: "https://{{ inventory_hostname }}:{{ gitlab_port }}/"

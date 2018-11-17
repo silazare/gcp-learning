@@ -8,3 +8,4 @@
  * [terraform_structured](./terraform_structured) -- Terraform project with structured resources
  * [ansible](./ansible) -- IaC and deploy with Ansible
  * [docker](./docker) -- Docker containers
+ * [gitlab](./gitlab) -- GitLab deployment on VM
