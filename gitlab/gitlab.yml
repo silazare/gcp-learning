@@ -1,5 +1,5 @@
-
-# ansible-playbook site.yml
+# Provision on VM
+# ansible-playbook gitlab.yml
 ---
 - name: Configure App host
   hosts: tag_gitlab

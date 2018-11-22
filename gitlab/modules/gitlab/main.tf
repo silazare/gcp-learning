@@ -8,13 +8,12 @@ resource "google_compute_firewall" "firewall_gitlab" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8443"]
+    ports    = ["80", "8443"]
   }
 
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["gitlab"]
 }
-
 
 resource "google_compute_instance" "gitlab" {
   name         = "gitlab"

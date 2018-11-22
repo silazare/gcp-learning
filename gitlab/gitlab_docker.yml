@@ -1,0 +1,55 @@
+# Provision on VM with Docker Compose
+# ansible-playbook gitlab_docker.yml
+---
+- name: Configure App host
+  hosts: tag_gitlab
+  gather_facts: no
+  become: yes
+
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: false
+
+    - name: Gathering facts with setup module
+      setup:
+
+  roles:
+    - docker
+
+  post_tasks:
+    - name: Create GitLab folders
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        mode: "0{{ item.perms|default('755') }}"
+        owner: "{{ item.user|default('ubuntu') }}"
+        group: "{{ item.group|default('ubuntu') }}"
+      loop:
+        - { path: "/srv/gitlab" }
+        - { path: "/srv/gitlab/config" }
+        - { path: "/srv/gitlab/data" }
+        - { path: "/srv/gitlab/logs" }
+
+    - name: Start GitLab in Docker Compose
+      docker_service:
+        project_name: gitlab
+        definition:
+          version: "2"
+          services:
+            web:
+              image: "gitlab/gitlab-ce:latest"
+              restart: always
+              hostname: "gitlab.example.com"
+              environment:
+                GITLAB_OMNIBUS_CONFIG: |
+                  external_url "http://{{ gce_public_ip }}"
+              ports:
+                - "80:80"
+                - "8443:443"
+                - "2222:22"
+              volumes:
+                - "/srv/gitlab/config:/etc/gitlab"
+                - "/srv/gitlab/logs:/var/log/gitlab"
+                - "/srv/gitlab/data:/var/opt/gitlab"
+      register: docker_output

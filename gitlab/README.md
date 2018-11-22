@@ -45,7 +45,7 @@ ssh ubuntu@<external_ip> -i ~/.ssh/ubuntu
 terraform destroy -auto-approve=true
 ```
 
-## Configuration Management
+## GitLab installation using Ansible role
 
 - Create Dynamic inventory for GCE as described: [here](https://github.com/silazare/gcp-learning/tree/master/ansible#appendix-a-gce-dynamic-inventory-configuration)
 
@@ -62,10 +62,30 @@ ansible-galaxy install geerlingguy.gitlab -p roles
 
 - Run playbook:
 ```sh
-ansible-playbook site.yml
+ansible-playbook gitlab.yml
 ```
 
 - Confirm that web interface is accessible:
 ```html
 https://<external_ip>:8443
+```
+
+## GitLab installation using Ansible and Docker
+
+- Create Dynamic inventory for GCE as described: [here](https://github.com/silazare/gcp-learning/tree/master/ansible#appendix-a-gce-dynamic-inventory-configuration)
+
+- Confirm that VM is accessible after creation:
+```sh
+cd gcp-learning/gitlab/
+ansible all -i environments/gce.py -m ping
+```
+
+- Run playbook:
+```sh
+ansible-playbook gitlab_docker.yml
+```
+
+- Confirm that web interface is accessible:
+```html
+http://<external_ip>:80
 ```
