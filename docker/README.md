@@ -79,9 +79,10 @@ docker pull mongo:latest
 - Create our app images:
 ```sh
 docker build -t <your-login>/post:1.0 ./post-py
-docker build -t <your-login>/comment:2.0 ./comment
-docker build -t <your-login>/ui:2.0 ./ui
+docker build -t <your-login>/comment:1.0 ./comment
+docker build -t <your-login>/ui:1.0 ./ui
 ```
+
 - Create docker bridge network:
 ```sh
 docker network create reddit --driver bridge
@@ -101,10 +102,10 @@ docker run -d --network=reddit \
 --network-alias=post <your-login>/post:1.0
 
 docker run -d --network=reddit \
---network-alias=comment <your-login>/comment:2.0
+--network-alias=comment <your-login>/comment:1.0
 
 docker run -d --network=reddit \
--p 9292:9292 <your-login>/ui:2.0
+-p 9292:9292 <your-login>/ui:1.0
 ```
 
 - Kill containers:
@@ -146,9 +147,20 @@ docker network connect front_net post
 docker network connect front_net comment
 ```
 
-### Docker Compose
+### Docker Compose with Prometheus
 
-- Start docker compose with default variables from .env:
+- Export username and build prometheus image (1st timed ):
+```sh
+export USER_NAME=<dockerhub-user>
+docker build -t $USER_NAME/prometheus .
+```
+
+- Build rest images via docker_build.sh scripts in each microservice folder
+```sh
+bash docker_build.sh
+```
+
+- Start docker compose with custom variables from .env (or edit to use your own):
 
 ```sh
 docker-compose up -d

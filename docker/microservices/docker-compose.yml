@@ -10,24 +10,47 @@ services:
           - post_db
           - comment_db
   ui:
-    build: ./ui
     image: ${USERNAME}/ui:${UI_VERSION}
     ports:
       - ${UI_PORT}:${UI_PORT}/tcp
     networks:
       - frontend
   post:
-    build: ./post-py
     image: ${USERNAME}/post:${POST_VERSION}
     networks:
       - backend
       - frontend
   comment:
-    build: ./comment
     image: ${USERNAME}/comment:${COMMENT_VERSION}
     networks:
       - backend
       - frontend
+  prometheus:
+    image: ${USER_NAME}/prometheus
+    ports:
+      - '9090:9090'
+    networks:
+      - frontend
+  node-exporter:
+    image: prom/node-exporter:v0.17.0
+    user: root
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    networks:
+      - frontend
+  mongodb-exporter:
+    image: eses/mongodb_exporter:latest
+    environment:
+    - MONGODB_URI=mongodb://mongo_db:27017
+    networks:
+      - frontend
+      - backend
 volumes:
   post_db:
 
