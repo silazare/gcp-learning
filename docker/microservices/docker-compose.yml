@@ -51,6 +51,16 @@ services:
     networks:
       - frontend
       - backend
+  blackbox:
+    image: prom/blackbox-exporter:latest
+    ports:
+      - '9115:9115'
+#    command:
+#    - --config.file=/etc/blackbox/blackbox.yml
+#    volumes:
+#    - ./prometheus/blackbox.yml:/etc/blackbox/blackbox.yml
+    networks:
+      - frontend
 volumes:
   post_db:
 
