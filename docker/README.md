@@ -151,8 +151,8 @@ docker network connect front_net comment
 
 - Export username and build prometheus image (1st timed ):
 ```sh
-export USER_NAME=<dockerhub-user>
-docker build -t $USER_NAME/prometheus .
+export USERNAME=<dockerhub-user>
+docker build -t $USERNAME/prometheus .
 ```
 
 - Build rest images via docker_build.sh scripts in each microservice folder
