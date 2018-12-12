@@ -89,6 +89,14 @@ services:
       - 3000:3000
     networks:
       - frontend
+  alertmanager:
+    image: ${USERNAME}/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+    ports:
+      - 9093:9093
+    networks:
+      - frontend
 
 volumes:
   post_db:

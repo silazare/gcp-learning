@@ -147,11 +147,12 @@ docker network connect front_net post
 docker network connect front_net comment
 ```
 
-### Docker Compose with Prometheus
+### Docker Compose (Prometheus/Grafana/AlertManager)
 
-- Export username and build prometheus image (1st timed ):
+- Export username and build images (1st timed ):
 ```sh
 export USERNAME=<dockerhub-user>
+cd prometheus
 docker build -t $USERNAME/prometheus .
 ```
 
@@ -177,4 +178,33 @@ docker run --rm --pid host -ti tehbilly/htop
 - Show docker container env:
 ```sh
 docker exec <id> env
+```
+### Appendix B: Grafana
+
+Grafana should be accessible on port 3000 with default credentials: admin/secret
+Dashboards with business metrics could be imported from [dashboards](./dashboards) folder
+
+### Appendix C: AlertManager
+
+One default rule is defined, if any host is down during 1 minute - alert should be
+triggered and sent to Slack. Need to define your own Slack channel integration and rebuild Docker image.
+
+```sh
+cat > alertmanager/config.yml << EOF
+global:
+  resolve_timeout: 1m
+  slack_api_url: '<your-slack-uri-here>'
+
+route:
+  receiver: 'slack-notifications'
+
+receivers:
+- name: 'slack-notifications'
+  slack_configs:
+  - channel: '#<your-channel-name-here>'
+EOF
+
+export USERNAME=<dockerhub-user>
+cd alertmanager
+docker build -t $USERNAME/alertmanager .
 ```
