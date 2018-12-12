@@ -31,6 +31,19 @@ services:
       - '9090:9090'
     networks:
       - frontend
+  cadvisor:
+    image: google/cadvisor:latest
+    volumes:
+      - '/:/rootfs:ro'
+      - '/var/run:/var/run:rw'
+      - '/sys:/sys:ro'
+      - '/var/lib/docker/:/var/lib/docker:ro'
+    depends_on:
+      - prometheus
+    ports:
+      - '8080:8080'
+    networks:
+      - frontend
   node-exporter:
     image: prom/node-exporter:v0.17.0
     user: root
@@ -42,27 +55,44 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    depends_on:
+      - prometheus
     networks:
       - frontend
   mongodb-exporter:
     image: eses/mongodb_exporter:latest
     environment:
     - MONGODB_URI=mongodb://mongo_db:27017
+    depends_on:
+      - prometheus
     networks:
       - frontend
       - backend
   blackbox:
     image: prom/blackbox-exporter:latest
+    depends_on:
+      - prometheus
     ports:
       - '9115:9115'
-#    command:
-#    - --config.file=/etc/blackbox/blackbox.yml
-#    volumes:
-#    - ./prometheus/blackbox.yml:/etc/blackbox/blackbox.yml
     networks:
       - frontend
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=secret
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    networks:
+      - frontend
+
 volumes:
   post_db:
+  grafana_data:
 
 networks:
   frontend:
