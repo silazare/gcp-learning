@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: post
+  labels:
+    app: reddit
+    component: post
+spec:
+  selector:
+    matchLabels:
+      app: reddit
+      component: post
+  replicas: 3
+  template:
+    metadata:
+      name: post
+      labels:
+        app: reddit
+        component: post
+    spec:
+      containers:
+      - image: exciter86/post:latest
+        name: post
+        env:
+        - name: POST_DATABASE_HOST
+          value: post-db
